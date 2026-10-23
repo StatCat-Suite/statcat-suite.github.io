@@ -77,7 +77,9 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - Domain Model: domain-model.md
   - Architecture: architecture.md
+  - Storage and Deployment: storage.md
   - Projects:
       - sdmxlib: https://statcat-suite.github.io/sdmxlib/
       - statcatlib: https://statcat-suite.github.io/statcatlib/
