@@ -11,6 +11,33 @@ This site holds what belongs to the suite as a whole: how the projects fit
 together and how their docs sites are set up. Each project's own site holds
 its guides, API reference and changelog.
 
+## Purpose
+
+Statistical agencies and open-data portals each publish through their own
+portal, search and taxonomy, so a question that spans two publishers takes two
+searches and a manual reconciliation. Most of them publish rich structural
+metadata over SDMX: the dimensions of each dataset, the codes each dimension
+takes, and the concepts behind them. Catalog search rarely uses that metadata,
+and data pipelines rebuild the same fetching, parsing and validation for each
+source.
+
+The suite ingests sources once into one local store that holds the structure
+and the catalog together, and queries them with SQL joins. Once built, the
+store answers without calling any publisher, and a published bundle can be
+copied to wherever it is served. Three kinds of consumer use it:
+
+- **Data pipelines** read a dataflow's structure before fetching it: the
+  dimensions to expect and the codes each may take, to validate against.
+  Datasets whose dimensions share a concept, such as the reference area, can
+  be joined on it.
+- **Search and discovery applications** search one catalog across publishers,
+  by keyword, by meaning or both, and filter it by structure: every dataset
+  with a code under Ontario, every dataset with a monthly frequency. Through
+  sdmxlib-rest, existing SDMX clients reach the same catalog over SDMX-REST.
+- **AI systems** retrieve typed metadata (datasets, dimensions, codes and
+  their definitions) to ground their answers, and cite each by its URN, so an
+  answer can be checked against its source.
+
 ## Projects
 
 | Project | What it does | Docs | Source |
