@@ -41,7 +41,7 @@ Each project owns one part of the contract:
 | --- | --- | --- |
 | Layout, manifest, overlays, checks | sdmxlib | [The bundle format](https://statcat-suite.github.io/sdmxlib/bundle/) |
 | The manifest's `statcat` section, the `statcat` schema, `search/` | statcatlib | [Bundle format](https://statcat-suite.github.io/statcatlib/bundle-format/) |
-| Serving a bundle over SDMX-REST | sdmxlib-rest | [README](https://github.com/StatCat-Suite/sdmxlib-rest#readme) |
+| Serving a bundle over SDMX-REST | sdmxlib-rest | [Serving a bundle](https://statcat-suite.github.io/sdmxlib-rest/serving/) |
 
 The manifest records a `token`, a UUIDv7 minted at each publication, and a
 SHA-256 for every file. Caches and HTTP `ETag`s key on the token.
