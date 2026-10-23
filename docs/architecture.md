@@ -20,7 +20,9 @@ libraries share one connection, so those joins need no ATTACH.
 Observations live beside the store, in a DuckLake catalog (`lake.ducklake`)
 over Parquet files. statcatlib's search index, when built, is a LanceDB
 directory (`search/`) with one table per language, each stemmed for that
-language.
+language. [Domain model](domain-model.md) describes what the two schemas
+hold, and [Storage and deployment](storage.md) how the files are laid out
+and served.
 
 ## The bundle
 

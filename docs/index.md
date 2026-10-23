@@ -38,7 +38,11 @@ sdmxlib-rest serves it.
 
 ## Where to read next
 
+- [Domain model](domain-model.md): SDMX in brief, sdmxlib's structural model,
+  statcatlib's catalog model, and the URN that links them.
 - [Architecture](architecture.md): the shared store, the bundle lifecycle and
   the version checks that keep the projects compatible.
+- [Storage and deployment](storage.md): the storage tiers, the lakehouse
+  analogy, the deployment layouts and the rules for serving a fleet.
 - [Documentation sites](sites.md): the configuration every project site
   shares, and how to add a project.
