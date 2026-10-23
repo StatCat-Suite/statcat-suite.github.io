@@ -1,0 +1,85 @@
+site_name: StatCat Suite
+site_description: "Python libraries for statistical and open data catalogs: SDMX structures and data, a queryable catalog, and an SDMX-REST service."
+site_url: "https://statcat-suite.github.io/"
+repo_url: "https://github.com/StatCat-Suite/statcat-suite.github.io"
+repo_name: "StatCat-Suite/statcat-suite.github.io"
+edit_uri: ""
+
+# ── Suite configuration ─────────────────────────────────────────────────────
+# Everything from here to "End of suite configuration" is the block every
+# project site copies (docs/sites.md). Change it here first, then in each
+# project. The hub lists its stylesheet by relative path; the projects list
+# the absolute URL.
+
+validation:
+  links:
+    anchors: warn
+
+extra_css:
+  - assets/stylesheets/statcat.css
+
+theme:
+  name: material
+  icon:
+    logo: material/library-shelves
+    repo: fontawesome/brands/github
+  favicon: assets/favicon.svg
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to light mode
+  features:
+    - content.code.copy
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - toc.follow
+
+extra:
+  homepage: https://statcat-suite.github.io/
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/StatCat-Suite
+      name: StatCat Suite on GitHub
+
+copyright: 'Part of the <a href="https://statcat-suite.github.io/">StatCat Suite</a>'
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - toc:
+      permalink: true
+
+# ── End of suite configuration ──────────────────────────────────────────────
+
+nav:
+  - Home: index.md
+  - Architecture: architecture.md
+  - Projects:
+      - sdmxlib: https://statcat-suite.github.io/sdmxlib/
+      - statcatlib: https://statcat-suite.github.io/statcatlib/
+      - sdmxlib-rest: https://github.com/StatCat-Suite/sdmxlib-rest#readme
+  - Documentation Sites: sites.md
