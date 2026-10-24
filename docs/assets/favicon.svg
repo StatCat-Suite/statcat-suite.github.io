@@ -1,1 +1,39 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#3f51b5" d="M19.5 9V1.5h-3V9h-3V1.5h-3V9h-3V1.5H4.65V9H3v1.5h18V9zm0 4.5h-3V21h-3v-7.5h-3V21h-3v-7.5H4.65V21H3v1.5h18V21h-1.5z"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="10 -16 362 362" width="64" height="64">
+<defs>
+  <radialGradient id="bg" cx="0.35" cy="0.32" r="0.85">
+    <stop offset="0" stop-color="#c9d0ff"/><stop offset="1" stop-color="#b4befe"/>
+  </radialGradient>
+  <linearGradient id="lens" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#89dceb"/><stop offset="1" stop-color="#74c7ec"/>
+  </linearGradient>
+  <linearGradient id="fur" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#313244"/><stop offset="0.45" stop-color="#11111b"/>
+  </linearGradient>
+</defs>
+<rect x="10" y="-16" width="362" height="362" rx="72" fill="url(#bg)"/>
+<g transform="rotate(8 178 306)">
+<path d="M65.5 151.0 C48.0 91.0 45.5 43.5 55.5 8.5 C88.0 28.5 120.5 61.0 145.5 96.0 Z" fill="url(#fur)" stroke="#11111b" stroke-width="8" stroke-linejoin="round"/>
+<path d="M290.5 151.0 C308.0 91.0 310.5 43.5 300.5 8.5 C268.0 28.5 235.5 61.0 210.5 96.0 Z" fill="url(#fur)" stroke="#11111b" stroke-width="8" stroke-linejoin="round"/>
+<path d="M75.5 133.5 C63.0 88.5 60.5 56.0 65.5 31.0 C88.0 48.5 108.0 71.0 125.5 91.0 Z" fill="#f5c2e7" stroke="#f5c2e7" stroke-width="6" stroke-linejoin="round"/>
+<path d="M280.5 133.5 C293.0 88.5 295.5 56.0 290.5 31.0 C268.0 48.5 248.0 71.0 230.5 91.0 Z" fill="#f5c2e7" stroke="#f5c2e7" stroke-width="6" stroke-linejoin="round"/>
+<path d="M80.5 113.5 L73.0 71.0 M95.5 98.5 L88.0 61.0 M110.5 86.0 L103.0 58.5" stroke="#eba0ac" stroke-width="3.5" stroke-linecap="round"/>
+<path d="M275.5 113.5 L283.0 71.0 M260.5 98.5 L268.0 61.0 M245.5 86.0 L253.0 58.5" stroke="#eba0ac" stroke-width="3.5" stroke-linecap="round"/>
+<path d="M178.0 91.0 C233.0 91.0 278.0 113.5 295.5 153.5 C305.5 178.5 308.0 211.0 303.0 231.0 L325.5 241.0 L305.5 253.5 L320.5 271.0 L295.5 278.5 C275.5 311.0 228.0 323.5 178.0 323.5 C128.0 323.5 80.5 311.0 60.5 278.5 L35.5 271.0 L50.5 253.5 L30.5 241.0 L53.0 231.0 C48.0 211.0 50.5 178.5 60.5 153.5 C78.0 113.5 123.0 91.0 178.0 91.0 Z" fill="url(#fur)" stroke="#11111b" stroke-width="8" stroke-linejoin="round"/>
+<ellipse cx="178.0" cy="281.0" rx="42.5" ry="26.2" fill="#313244" opacity="0.55"/>
+<path d="M135.5 138.5 L193.0 196.0 L135.5 253.5 L78.0 196.0 Z" fill="url(#lens)" stroke="#209fb5" stroke-width="4" stroke-linejoin="round"/>
+<path d="M220.5 138.5 L278.0 196.0 L220.5 253.5 L163.0 196.0 Z" fill="url(#lens)" stroke="#209fb5" stroke-width="4" stroke-linejoin="round"/>
+<path d="M178.0 181.0 L193.0 196.0 L178.0 211.0 L163.0 196.0 Z" fill="#209fb5"/>
+<path d="M103.0 183.5 L123.0 163.5" stroke="#eff1f5" stroke-width="5" stroke-linecap="round" opacity="0.55"/>
+<path d="M188.0 183.5 L208.0 163.5" stroke="#eff1f5" stroke-width="5" stroke-linecap="round" opacity="0.55"/>
+<path d="M153.5 214.0 L123.5 184.0" fill="#eff1f5" stroke="#eff1f5" stroke-linecap="round" stroke-linejoin="round" stroke-width="10.6"/>
+<path d="M108.5 169.0 L134.0 173.5 L113.0 194.5 Z" fill="#eff1f5" stroke="#eff1f5" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.4"/>
+<path d="M202.5 178.0 L232.5 208.0" fill="#eff1f5" stroke="#eff1f5" stroke-linecap="round" stroke-linejoin="round" stroke-width="10.6"/>
+<path d="M247.5 223.0 L243.0 197.5 L222.0 218.5 Z" fill="#eff1f5" stroke="#eff1f5" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.4"/>
+<path d="M165.5 263.5 L190.5 263.5 L178.0 277.2 Z" fill="#f5c2e7" stroke="#f5c2e7" stroke-width="5" stroke-linejoin="round"/>
+<path d="M178.0 277.2 q-13.8 18.8 -27.5 5.0 q-3.8 -3.8 -5.0 -8.8 M178.0 277.2 q13.8 18.8 27.5 5.0 q3.8 -3.8 5.0 -8.8" stroke="#cdd6f4" stroke-width="5.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M115.5 271.0 q-30.0 -17.5 -62.5 -12.5" stroke="#cdd6f4" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.85"/>
+<path d="M115.5 286.0 q-30.0 2.5 -62.5 7.5" stroke="#cdd6f4" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.85"/>
+<path d="M240.5 271.0 q30.0 -17.5 62.5 -12.5" stroke="#cdd6f4" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.85"/>
+<path d="M240.5 286.0 q30.0 2.5 62.5 7.5" stroke="#cdd6f4" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.85"/>
+</g>
+</svg>
