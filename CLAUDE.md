@@ -12,6 +12,9 @@ paths on the same domain.
   stays on that project's site, and the hub links to it.
 - `docs/sites.md`: the configuration block every project site copies, and how
   sites link to each other.
+- `docs/conventions.md`: what every project repository follows: the README
+  badge row and AI-use note, install order, commit and PR rules, the `main`
+  and release-tag rulesets, the dependency cap and the linting rule.
 - `docs/assets/stylesheets/statcat.css` and `docs/assets/favicon.svg`: served
   to every project site, which list them by absolute URL. `favicon.svg` is both
   the header logo and the favicon. A change to either file restyles every site
@@ -35,6 +38,11 @@ paths on the same domain.
 
 - git commit/push/merge etc. will NEVER be done without asking.
 - The project always uses conventional commits for commit messages.
+- Nothing is signed with Claude: commit messages carry no `Co-Authored-By`
+  trailer, and PR descriptions, issues and comments carry no "Generated with
+  Claude Code" footer.
+- `main` is protected: changes arrive through a PR, merged with a merge commit
+  (`gh pr merge --merge`). `docs/conventions.md` describes the ruleset.
 - The repository is github.com/StatCat-Suite/statcat-suite.github.io; use `gh`
   for the API.
 - Write a GitHub issue or PR as `GH-N`, and one in another repository as

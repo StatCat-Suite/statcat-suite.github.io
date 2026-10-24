@@ -143,3 +143,6 @@ there too.
    `.github/workflows/docs.yml` does.
 3. Add the project to the table on the [home page](index.md), to the
    `Projects` section of this hub's `nav`, and to the table above.
+4. Follow the [project conventions](conventions.md): the README badge row
+   and AI-use note, the install order, and the rulesets on `main` and on
+   release tags.
