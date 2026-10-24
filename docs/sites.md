@@ -25,8 +25,8 @@ sites share one look and link back to the hub:
   It holds the Catppuccin code highlighting, Latte in light mode and Mocha in
   dark mode.
 - **One theme block:** the indigo palette with its light and dark toggle, the
-  `library-shelves` logo icon, the hub's favicon, and the same navigation
-  features (tabs, sections, back-to-top, code copy).
+  hub's cat logo as both the header logo and the favicon, and the same
+  navigation features (tabs, sections, back-to-top, code copy).
 - **Links to the hub:** the logo links to the hub (`extra.homepage`), the
   footer names the suite (`copyright`), and the last navigation tab is
   "StatCat Suite".
@@ -39,8 +39,8 @@ sites share one look and link back to the hub:
 
 Copy this into a project's `mkdocs.yml`, below its `site_*` and `repo_*`
 keys, and add the hub to the end of its `nav`. This hub's own `mkdocs.yml`
-carries the same block with its stylesheet and favicon given as relative
-paths, and is the source this page is kept equal to.
+carries the same block with its stylesheet, logo and favicon given as
+relative paths, and is the source this page is kept equal to.
 
 ```yaml
 validation:
@@ -52,8 +52,8 @@ extra_css:
 
 theme:
   name: material
+  logo: https://statcat-suite.github.io/assets/favicon.svg
   icon:
-    logo: material/library-shelves
     repo: fontawesome/brands/github
   favicon: https://statcat-suite.github.io/assets/favicon.svg
   palette:

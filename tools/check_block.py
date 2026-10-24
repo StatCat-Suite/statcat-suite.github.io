@@ -23,6 +23,7 @@ SITE = "https://statcat-suite.github.io/"
 #: The hub's relative asset paths, as a project names them.
 ABSOLUTE = {
     "  - assets/stylesheets/statcat.css": f"  - {SITE}assets/stylesheets/statcat.css",
+    "  logo: assets/favicon.svg": f"  logo: {SITE}assets/favicon.svg",
     "  favicon: assets/favicon.svg": f"  favicon: {SITE}assets/favicon.svg",
 }
 
