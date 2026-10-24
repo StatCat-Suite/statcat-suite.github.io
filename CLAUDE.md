@@ -1,9 +1,9 @@
 # statcat-suite.github.io
 
 The StatCat Suite docs hub: a Material for MkDocs site served at the root of
-https://statcat-suite.github.io/. The project sites (sdmxlib, statcatlib) are
-built and deployed from their own repositories and served under their own
-paths on the same domain.
+https://statcat-suite.github.io/. The project sites (sdmxlib, statcatlib,
+sdmxlib-rest) are built and deployed from their own repositories and served
+under their own paths on the same domain.
 
 ## What lives here
 
