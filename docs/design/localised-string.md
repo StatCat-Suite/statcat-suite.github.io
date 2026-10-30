@@ -2,9 +2,12 @@
 
 * **Author:** Gabriel Gellner
 * **Date:** 2026-10-30
-* **Status:** RFC for team feedback, from an EGM brainstorm: two Goldfish
-  review rounds, a seven-lens final review and a four-lens review of the final
-  choices, with every decision settled by the owner. A suite design: it
+* **Status:** Built in sdmxlib: Stages 1 and 2 shipped in sdmxlib 0.79.0
+  (StatCat-Suite/sdmxlib#308 and StatCat-Suite/sdmxlib#310). statcatlib's
+  Stages 4 and 5 are open, as StatCat-Suite/statcatlib#91. The design came
+  from an EGM brainstorm: two Goldfish review rounds, a seven-lens final
+  review and a four-lens review of the final choices, with every decision
+  settled by the owner. A suite design: it
   changes sdmxlib's text model and statcatlib's label API, and lives in the hub
   under `docs/design/`, as GH-12's suite design workflow sets out.
 * **Based on:** sdmxlib `feat/gh-280-language-tags` at `9955927`
@@ -585,9 +588,9 @@ rebuilds every catalog; that belongs to StatCat-Suite/statcatlib#70.
 | Stage | Repository and PR | Content | Done when |
 |---|---|---|---|
 | 0 | statcatlib, StatCat-Suite/statcatlib#90 | Decision 14 names `LocalisedString(text, lang)` and the suite JSON form | Done (`9ff6ddd`) |
-| 1 | sdmxlib, StatCat-Suite/sdmxlib#308 | Rename to `LocalisedString`; D6; D9; `InvalidTagError`, raised by `normalize_tag`; D9 stated inline in sdmxlib's language-tags design, its D7, as a suite contract | Stage 1 criteria pass |
-| 2 | sdmxlib, StatCat-Suite/sdmxlib#309 | D3, D4, D7, D8, D11–D13; a "Model classes and fields" section in `docs/design/query-naming.md` with the D1, D2 and D8 rules and a deviations row for `label`/`locale` → `text`/`lang`; the hub's bench scripts turned into gated tests in `tests/bench/`; the audit hook and call-site table | Stage 2 criteria pass |
-| 3 | hub | This design and its evidence (D10) | Published |
+| 1 | sdmxlib, StatCat-Suite/sdmxlib#308 | Rename to `LocalisedString`; D6; D9; `InvalidTagError`, raised by `normalize_tag`; D9 stated inline in sdmxlib's language-tags design, its D7, as a suite contract | Done (`ddedb45`, sdmxlib 0.79.0) |
+| 2 | sdmxlib, StatCat-Suite/sdmxlib#309 | D3, D4, D7, D8, D11–D13; a "Model classes and fields" section in `docs/design/query-naming.md` with the D1, D2 and D8 rules and a deviations row for `label`/`locale` → `text`/`lang`; the hub's bench scripts turned into gated tests in `tests/bench/`; the audit hook and call-site table | Done (StatCat-Suite/sdmxlib#310, `203cbf4`, sdmxlib 0.79.0) |
+| 3 | hub | This design and its evidence (D10) | Done (GH-13) |
 | 4 | statcatlib, StatCat-Suite/statcatlib#91, after StatCat-Suite/statcatlib#70 | Move to the sdmxlib release containing Stages 1–2; fix every call-site table row (`_istring_to_map`, `store.py:1162, 1171`, `sources/sdmx.py:115`, `scopes.py:999, 1054`) with public returns kept on `.text` / `as_dict()`; add msgspec as a dependency | statcatlib criteria pass |
 | 5 | statcatlib, StatCat-Suite/statcatlib#91; slice 4 of its language-tags RFC | Public label APIs return `LocalisedString`; projection columns `title` and `title__lang`, which settles that RFC's open `title_lang` item; ingest refuses an empty `lang` before `lance.py:1260` | statcatlib criteria pass |
 
