@@ -11,13 +11,10 @@
   (StatCat-Suite/sdmxlib#308, open, unreleased; sdmxlib 0.78.0, store schema
   2.51); statcatlib `main` at `4d4eebe` and `docs/gh-88-lowercase-tags` at
   `9ff6ddd` (StatCat-Suite/statcatlib#90); msgspec 0.22.0; CPython 3.14.8.
-* **Evidence:** the IM audit, the benchmark scripts and the EGM review
-  reports (`brainstorm-round1.md`, `final-review.md`, `final-review-2.md`)
-  were produced while drafting this design and are not yet in any
-  repository. StatCat-Suite/sdmxlib#309 (Stage 2) commits the benchmark
-  scripts to sdmxlib's `tests/bench/` and the notes and reports to sdmxlib's
-  `docs/design/egm/localised-string/`; this page links them when that
-  lands. Until then, the figures quoted here are their only record.
+* **Evidence:** [`egm/localised-string/`](egm/localised-string/README.md)
+  holds the IM audit, the benchmark scripts and the EGM review reports this
+  design draws on. StatCat-Suite/sdmxlib#309 (Stage 2) copies the benchmark
+  scripts into sdmxlib's `tests/bench/` as gated tests.
 
 ## Terms
 
@@ -589,8 +586,8 @@ rebuilds every catalog; that belongs to StatCat-Suite/statcatlib#70.
 |---|---|---|---|
 | 0 | statcatlib, StatCat-Suite/statcatlib#90 | Decision 14 names `LocalisedString(text, lang)` and the suite JSON form | Done (`9ff6ddd`) |
 | 1 | sdmxlib, StatCat-Suite/sdmxlib#308 | Rename to `LocalisedString`; D6; D9; `InvalidTagError`, raised by `normalize_tag`; D9 stated inline in sdmxlib's language-tags design, its D7, as a suite contract | Stage 1 criteria pass |
-| 2 | sdmxlib, StatCat-Suite/sdmxlib#309 | D3, D4, D7, D8, D11–D13; a "Model classes and fields" section in `docs/design/query-naming.md` with the D1, D2 and D8 rules and a deviations row for `label`/`locale` → `text`/`lang`; bench scripts committed to `tests/bench/`, notes and EGM reports to `docs/design/egm/localised-string/`; the audit hook and call-site table | Stage 2 criteria pass |
-| 3 | hub | This design (D10); links to the committed evidence once Stage 2 lands | Published |
+| 2 | sdmxlib, StatCat-Suite/sdmxlib#309 | D3, D4, D7, D8, D11–D13; a "Model classes and fields" section in `docs/design/query-naming.md` with the D1, D2 and D8 rules and a deviations row for `label`/`locale` → `text`/`lang`; the hub's bench scripts turned into gated tests in `tests/bench/`; the audit hook and call-site table | Stage 2 criteria pass |
+| 3 | hub | This design and its evidence (D10) | Published |
 | 4 | statcatlib, StatCat-Suite/statcatlib#91, after StatCat-Suite/statcatlib#70 | Move to the sdmxlib release containing Stages 1–2; fix every call-site table row (`_istring_to_map`, `store.py:1162, 1171`, `sources/sdmx.py:115`, `scopes.py:999, 1054`) with public returns kept on `.text` / `as_dict()`; add msgspec as a dependency | statcatlib criteria pass |
 | 5 | statcatlib, StatCat-Suite/statcatlib#91; slice 4 of its language-tags RFC | Public label APIs return `LocalisedString`; projection columns `title` and `title__lang`, which settles that RFC's open `title_lang` item; ingest refuses an empty `lang` before `lance.py:1260` | statcatlib criteria pass |
 
