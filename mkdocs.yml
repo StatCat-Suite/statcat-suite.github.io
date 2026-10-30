@@ -86,3 +86,5 @@ nav:
       - sdmxlib-rest: https://statcat-suite.github.io/sdmxlib-rest/
   - Documentation Sites: sites.md
   - Project Conventions: conventions.md
+  - Design:
+      - "RFC: LocalisedString text model": design/localised-string.md
