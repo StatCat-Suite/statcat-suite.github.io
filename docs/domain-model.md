@@ -27,7 +27,7 @@ meaning:
 
 | Artefact | What it is | Example |
 | --- | --- | --- |
-| **Dataflow** | A published data product, with a name, an agency and the structure behind it. | Eurostat's `NAMA_10_GDP`, GDP and main components |
+| **Dataflow** | A published set of observations, with a name, an agency and the structure behind it. A product groups the dataflows released together. | Eurostat's `NAMA_10_GDP`, GDP and main components |
 | **Data structure (DSD)** | The schema of a dataflow's observations: the **dimensions** that identify each observation, the **attributes** that annotate it, and the **measures** it records. | Dimensions `freq`, `unit`, `na_item`, `geo`, `TIME_PERIOD` |
 | **Codelist** | The values a dimension or attribute may take, with multilingual labels and parent codes. | `CL_FREQ`: `A` annual, `Q` quarterly, `M` monthly |
 | **Concept** | The meaning of a component. Two dataflows whose dimensions reference the same concept describe the same thing. | `REF_AREA`, the reference area |
@@ -152,5 +152,5 @@ questions need the link.
   for the structural filters.
 - sdmxlib: [Hierarchies](https://statcat-suite.github.io/sdmxlib/cookbook/hierarchies/)
   for how a hierarchy is chosen for a component.
-- [Architecture](architecture.md) for the store and the bundle the two models
-  live in.
+- [Architecture](architecture.md) for the store, and the products and
+  editions the two models live in.
