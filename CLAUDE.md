@@ -8,7 +8,7 @@ under their own paths on the same domain.
 ## What lives here
 
 - `docs/index.md`, `docs/architecture.md`: what belongs to the suite as a
-  whole. Anything one project owns (its guides, API, bundle-format sections)
+  whole. Anything one project owns (its guides, API, edition-format sections)
   stays on that project's site, and the hub links to it.
 - `docs/sites.md`: the configuration block every project site copies, and how
   sites link to each other.
@@ -29,9 +29,9 @@ working from here reads them at these paths:
 
 | Repository | Path | Depends on | Owns | `EGM.md` maps |
 |---|---|---|---|---|
-| sdmxlib | `../sdmxlib` | none | The SDMX model and its readers and writers, the `sdmx` store schema, `bundle.manifest.json` | 23 |
+| sdmxlib | `../sdmxlib` | none | The SDMX model and its readers and writers, the `sdmx` store schema, the edition manifest (`manifest.json`, format 3.0), the Inventory documents (`catalog.json`, `CURRENT`, roots, leaves), their rules and reader | 24 |
 | sdmxlib-rest | `../sdmxlib-rest` | sdmxlib | The SDMX REST service | 8 |
-| statcatlib | `../statcatlib` | sdmxlib | The catalog model, the `statcat` store schema, the search index, the `statcat` bundle section | 8 |
+| statcatlib | `../statcatlib` | sdmxlib | The catalog model, the `statcat` store schema, the search index, the Inventory writer, the manifest's `statcat` section, the Inventory root's `extensions.statcat` catalog description | 8 |
 
 Dependencies run one way: sdmxlib imports neither sdmxlib-rest nor
 statcatlib. Each repository has:
@@ -51,7 +51,7 @@ checkout is elsewhere, use `git -C ../sdmxlib show origin/main:<path>`.
 ## Suite designs
 
 A design that changes a contract between repositories (a shared model type, a
-storage schema both write, a bundle section) lives in `docs/design/` here. A
+storage schema both write, a manifest section) lives in `docs/design/` here. A
 design that one repository owns stays in that repository.
 
 A suite design:
