@@ -63,8 +63,8 @@ A suite design:
   given to the reviewers.
 
 Handoff is one issue per affected repository, linking the design and listing
-the acceptance checks. That repository's own session drafts its local design
-from the issue (`/egm-draft`), links the suite design, and runs its own drift
+the acceptance checks. That repository's own session, or a subagent a session
+here delegates to, drafts its local design from the issue (`/egm-draft`), links the suite design, and runs its own drift
 checks. A local design that needs a contract change brings it back to the
 suite design first.
 
@@ -75,8 +75,14 @@ suite design first.
   enforces it, rewriting the hub's relative asset paths to the absolute URLs
   the projects use. Change `mkdocs.yml` first, then the page, then each
   project's copy.
-- Do not edit the project repositories from here. A change the projects need
-  goes in an issue on the project's repository.
+- A session here changes a project repository only by delegating the task to
+  a subagent, with one writer per repository: while the subagent works there,
+  the owner runs no other session in that repository. The subagent follows
+  that repository's CLAUDE.md, starts from `origin/main` on its own branch,
+  records the commit it starts from, and opens a PR. It never merges or
+  releases. The session here reviews the PR against the issue and the design
+  before reporting it to the owner. Any other change the projects need goes
+  in an issue on the project's repository.
 - `just ci` is the gate: prose check, block check, `mkdocs build --strict`.
   The Pages workflow runs the same recipe before it deploys.
 
