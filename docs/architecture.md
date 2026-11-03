@@ -65,6 +65,49 @@ naming one leaf per product, and a leaf gives each edition one of four
 states: `embargoed`, `live`, `superseded` or `withdrawn`. A release, a
 rollback or a change of embargo writes one new Inventory version.
 
+## Structure products and partials
+
+A product is a **data product** or a **structure product**, and its leaf
+records which. A structure product holds full SDMX artefacts (codelists,
+concept schemes, hierarchies) and no dataflows or observations. The catalog
+splits them by how often they change: `structure-geo`,
+`structure-classifications` and `structure-concepts`. A hierarchy goes in
+the structure product of the codelist it arranges. A structure edition's
+references may resolve in another structure product's live or embargoed
+editions.
+
+A data product holds its dataflows, their DSDs and observations, and a
+**partial** of each codelist they use: the codelist cut to the codes its
+data holds. The manifest records each partial's `partial_of`, the
+fingerprint of the full codelist it was cut from. A codelist that a data
+product cuts needs a structure product holding it full.
+
+The structure product that holds an artefact full is that artefact's
+**home**, and a catalog has at most one. When a home's artefact changes,
+data editions that hold the old copy or a partial cut from it become
+**stale**. Stale is derived from the Inventory and the manifests, never
+recorded. A stale live edition keeps serving until its product is
+republished, and a stale embargoed edition is refused at release.
+
+The Inventory writer refuses a version that breaks one of these rules
+(sharded catalog spec
+[§6.5](https://statcat-suite.github.io/sdmxlib/design/sharded-bundle-catalog/#65-invariants-the-release-job-enforces)),
+and writes nothing:
+
+| Item | Refuses |
+| --- | --- |
+| 4 | A data edition entering `live` or `embargoed` whose full artefact or partial matches no live or embargoed edition of its home; a cut codelist with no home; a full artefact with no home, such as a DSD two data products share, that differs among the editions going live |
+| 7 | A structure edition entering `live` with a full artefact another structure product holds live |
+| 8 | A data edition entering `live` whose artefact only an embargoed structure edition holds; release that structure edition first |
+
+statcatlib applies the rules at every seal, release, rollback and journal
+repair. `statcat verify-catalog` lists stale editions, and `statcat doctor`
+reports them with partials whose URN lost its home.
+[Structure products](https://statcat-suite.github.io/statcatlib/api/store/#structure-products)
+and statcatlib's
+[catalog format §3.3](https://statcat-suite.github.io/statcatlib/catalog-format/#33-the-cross-product-rules)
+give the details.
+
 ## Lifecycle
 
 ```mermaid
@@ -83,7 +126,8 @@ graph LR
 2. **Seal.** `WorkingCopy.seal()` rebuilds the search index, has sdmxlib's
    `seal` write the manifest with statcatlib's `statcat` section, and records
    the edition in a new Inventory version: `live`, or `embargoed` while the
-   catalog's embargo is on.
+   catalog's embargo is on. A seal checks the edition at `publish` against
+   the catalog's structure products before it records it.
 3. **Check.** `statcat verify-catalog` checks the Inventory and every edition
    it records. `sdmxlib.edition.check_edition` checks one edition directory,
    running statcatlib's `check_catalog` as its `statcat` extension. Run the
@@ -105,8 +149,8 @@ replacement.
 
 Each format an edition or the Inventory holds records its version, and a
 reader that meets a version it does not read refuses the document instead of
-misreading it. The versions below are those of sdmxlib 0.81.0, statcatlib
-0.12.0 and sdmxlib-rest 0.9.0:
+misreading it. The versions below are those of sdmxlib 0.84.0, statcatlib
+0.13.0 and sdmxlib-rest 0.9.2:
 
 | Recorded in | Version of | At | Refused by |
 | --- | --- | --- | --- |
