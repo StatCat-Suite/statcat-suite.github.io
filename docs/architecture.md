@@ -149,15 +149,16 @@ replacement.
 
 Each format an edition or the Inventory holds records its version, and a
 reader that meets a version it does not read refuses the document instead of
-misreading it. The versions below are those of sdmxlib 0.84.0, statcatlib
-0.13.0 and sdmxlib-rest 0.9.2:
+misreading it. The versions below are those of sdmxlib 0.85.0, statcatlib
+0.14.0 and sdmxlib-rest 0.10.0:
 
 | Recorded in | Version of | At | Refused by |
 | --- | --- | --- | --- |
 | `manifest.json`'s `format_version` | sdmxlib's edition manifest | `"3.0"` | sdmxlib, which reads any `3.x` (`ManifestError`) |
 | `sdmx._meta` and the manifest's `schema_version` | sdmxlib's store schema | `"2.52"` | sdmxlib (`StoreSchemaError`), and through it statcatlib's `Product.view()` |
-| `catalog.json`'s `format_version` | sdmxlib's catalog document | `"1.0"` | sdmxlib's Inventory reader, which reads any `1.x` (`InventoryError`) |
-| Each Inventory root's and leaf's `format_version` | sdmxlib's Inventory format | `"1.0"` | sdmxlib's Inventory reader, which reads any `1.x` (`InventoryError`) |
+| `catalog.json`'s `format_version` | sdmxlib's catalog document | `"1.0"`, or `"2.0"` once a catalog opts in to history expiry | sdmxlib's Inventory reader, which reads any `1.x` or `2.x` (`InventoryError`) |
+| Each Inventory root's and leaf's `format_version` | sdmxlib's Inventory format | `"1.2"` | sdmxlib's Inventory reader, which reads any `1.x` (`InventoryError`) |
+| `inventory/HISTORY`'s and each history segment's `format_version` | sdmxlib's history format | `"1.0"` | sdmxlib's Inventory reader, which reads any `1.x` (`InventoryError`) |
 | The manifest's `extensions.statcat.format` | statcatlib's `statcat` section | `3` | statcatlib's `check_catalog` |
 | `statcat._meta` | statcatlib's catalog schema | `"2.2"` | statcatlib's `Product.view()` and `Product.working_copy()` |
 | `search/index.json`'s `version` | statcatlib's search index manifest | `3` | statcatlib's `Product.view()` and `Product.working_copy()` |
