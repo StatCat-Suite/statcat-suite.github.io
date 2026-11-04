@@ -224,8 +224,8 @@ Writer rules that come with the history fields:
   name.
 
 Event kinds. The kind `reinstate`, which `reinstate` (`_rules.py:425-461`;
-Phase 4 work in the plan, line 333) records, arrives in whichever of
-Inventory 1.1 and 1.2 the specification merges first, and only once. A
+Phase 4 work in the plan, line 333) records, arrives in Inventory 1.2 with
+the history fields (H24). A
 server fold of `pending/` records `seal`. The owner's Phase 7 kind `search`
 (GH-19) arrives in its own minor version.
 
@@ -712,7 +712,7 @@ mapping. The stage-3 design starts from these requirements:
 | H20 | No root-major lock-out. Every server expiry waits until the §9.2 rollback window of the last pre-stage-1 pod image has closed, and checks every pod's `sdmxlib_version` on every run, counting an unknown version as a failure. | An old reader skips an undecodable root and walks back (`_reader.py:109-136`), so a root major makes old pods serve stale versions from the opt-in (owner, 2026-11-04; round-3 Blocker 1). Answers round-3 Question (b). |
 | H21 | Server expiry is Azure-only in stage 2. Opt-in on another blob store is refused. | S3 and GCS have no blob lease; a lock object with a TTL needs its own fencing design. |
 | H22 | On an opted-in catalog every restore bumps the epoch, and an epoch-keeping rollback is unsupported. | Under object lock, newer segments survive an epoch-keeping rollback and `(restore_epoch, seq)` would be reused (round-3 Major 7). |
-| H23 | Stage 2 adds no server expiry for S3 or GCS. | The deployment target is Azure. S3 support needs a conditional lock object with a TTL and fencing through `If-Match` on `HISTORY`, designed when a deployment needs it (owner, 2026-11-04). |
+| H23 | H21 stands: stage 2 adds no server expiry for S3 or GCS. | The deployment target is Azure. S3 support needs a conditional lock object with a TTL and fencing through `If-Match` on `HISTORY`, designed when a deployment needs it (owner, 2026-11-04). |
 | H24 | Inventory 1.2 adds the `reinstate` kind, with the history fields. | One minor bump carries both, whichever specification PR merges first (owner, 2026-11-04). |
 
 ### The §6.6 escape route
@@ -805,8 +805,8 @@ and more tree levels.
 - **sdmxlib** owns:
   - the history fields `previous_root_sha256` and `changes`, defined by their
     presence and numbered Inventory 1.2 where a number is needed; the item
-    fields; the writer rules; and the `reinstate` kind, in whichever of 1.1
-    and 1.2 merges first;
+    fields; the writer rules; and the `reinstate` kind, in Inventory 1.2
+    (H24);
   - `catalog.json` 2.0 with `history`, a reader decode that accepts majors 1
     and 2, and a writer decode that accepts 2.x only for a writer that
     declares stage-2 support;
@@ -859,7 +859,7 @@ Specification sections:
   an opted-in catalog every restore bumps the epoch and an epoch-keeping
   rollback is unsupported, a live-only export takes a new `catalog_id`);
 - §6.2 (the root history fields defined by presence, Inventory 1.2, the
-  `reinstate` kind coordinated with sdmxlib#348, the fold records `seal`);
+  `reinstate` kind in Inventory 1.2, the fold records `seal`);
 - §6.3 (the change item and entry item);
 - §6.6 (the reader fallback, the writer rules with the stale-base refusal
   under the lock, and the escape-route amendment);
@@ -873,6 +873,12 @@ Specification sections:
   `inventory/HISTORY` for the fallback);
 - §10.3 (backup order; restores only add segments under `history/`);
 - §11.4 (GC stops at `expired_through` and fails closed on a missing root);
+- §6.5 (the release job reads each incoming edition's manifest to verify
+  `manifest_sha256`, and reads every other edition's artefact records from
+  its leaf's filled `artefacts`);
+- §11.2 step 2 (the fold skips a registration whose edition the Inventory
+  already records) and §11.4 (GC deletes folded `pending/` registrations
+  after the retention window);
 - §11.6 (W, K and the staleness alert).
 
 Acceptance:
@@ -956,8 +962,8 @@ Acceptance:
 An issue once sdmxlib releases stage 1: raise the sdmxlib floor to that
 release; add `sdmxlib_version`, from `importlib.metadata.version("sdmxlib")`,
 to the `GET /` payload in both branches (`app.py:233-241`), so a consumer's
-`root_payload` keeps it; and test serving a catalog with expired roots and a
-missing `CURRENT`.
+`root_payload` keeps it. sdmxlib-rest reads no Inventory object, so the
+reader fallback is tested in sdmxlib (StatCat-Suite/sdmxlib#361).
 
 ## Review response
 
