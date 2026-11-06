@@ -247,11 +247,16 @@ empty column is today's writer, which leaves the field empty.
 | Object | Expected: `artefacts` filled (Phase 5) | Today: `artefacts` empty |
 | --- | --- | --- |
 | Root at 7,000 products | 1.6 MB | 1.6 MB |
-| One-edition leaf | 2.4 KB | 510 bytes |
+| One-edition leaf | 2,579 bytes | 665 bytes |
 | Change item for a release (this design's `entry`) | 920 bytes | 920 bytes |
 | Change list, release of 200 tables | 185 KB | 185 KB |
 | Change list, republish of 7,000 products | 6.5 MB | 6.5 MB |
 | Change list, republish, if `entry` were the whole `LeafEntry` | 33 MB | 7.0 MB |
+
+The leaf row is measured (StatCat-Suite/statcatlib#137): the average leaf as
+written, in indented JSON, with one dataflow URN and `pull_bytes`, and with 10
+artefact records in the filled column. The other rows are the original
+estimates.
 
 Under this design's `entry`, filling `artefacts` changes leaves only. A leaf
 keeps every edition until it is retired, so a leaf with n editions is about
