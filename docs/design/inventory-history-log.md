@@ -2,7 +2,7 @@
 
 * **Author:** Gabriel Gellner
 * **Date:** 2026-11-04
-* **Status:** Draft, revision 4.
+* **Status:** Draft, revision 5.
     - Revision 1 had an EGM review
       ([report](egm/inventory-history-log/review_report.md): 7 Blocker, 17
       Major, 10 Nit). The owner then decided three points
@@ -20,9 +20,16 @@
       Inventory 1.2 where a number is needed (H19); the root-major fallback is
       dropped in favour of the rollback-window gate (H20); and Phase 5 fills
       `LeafEntry.artefacts` ([Sizes](#sizes)).
-    - This revision applies those decisions and the round-3 fixes. The table
+    - Revision 4 applied those decisions and the round-3 fixes. The table
       [Review response](#review-response) maps each finding of all three
       rounds to its change.
+    - This revision takes three changes from statcatlib's Phase 5 design
+      (StatCat-Suite/statcatlib#52, `docs/design/release-job.md`), which the
+      owner accepted on 2026-11-10: the leaf-set cache lives on a persistent
+      volume (S23); a restore tombstones the editions only its discarded roots
+      recorded, and the fold holds registrations older than the restore (S25);
+      and a `CatalogAdmin` call waits at most 120 s for the release job's
+      lease (S26). sdmxlib's spec carries the same text.
     - The specification PR is StatCat-Suite/sdmxlib#361, and statcatlib's work
       is StatCat-Suite/statcatlib#125. This is a suite design: sdmxlib owns the
       formats, schemas and reader; statcatlib's Inventory writer and release job
@@ -194,7 +201,8 @@ Rules for items:
   state, such as a rescheduled `release_at`.
 - `tombstone` marks the `retired` list and is not a fifth state. §6.4's
   "Retirement is a tombstone, never a state" stands. A tombstone comes from a
-  `retire` version; `reinstate` gives `from: tombstone, to: superseded`.
+  `retire` version, or from the `restore` version for an edition only the
+  discarded roots recorded; `reinstate` gives `from: tombstone, to: superseded`.
 - Nothing removes a tombstone from `retired` today (`prune` "never expires a
   tombstone", statcatlib `admin.py:538`). A later writer that does writes
   `to: null`, so a replay of `retired` stays exact.
@@ -458,8 +466,11 @@ On Azure Blob Storage:
 - The release job runs one instance at a time. On an opted-in catalog it holds
   a lease on `inventory/HISTORY` for its whole run. A second run, started by
   hand or by a second schedule, fails to take the lease and writes nothing.
-  statcatlib's blob writer takes the same lease, so an operator's
-  `CatalogAdmin` call under the release job's identity waits for the run.
+  statcatlib's blob writer takes the same lease: an operator's `CatalogAdmin`
+  call under the release job's identity waits up to 120 s for it, then fails
+  and names the runbook that breaks a lease. The release job expires only in
+  runs scheduled for expiry, at times with no release, so a run at a release
+  time holds the lease for the seconds its other steps take.
 - The lease lasts 60 s and the holder renews it every 20 s. Before each
   destructive call (a segment write, a `HISTORY` write, a root or leaf
   delete) the holder checks that its last successful renewal is less than
@@ -523,9 +534,12 @@ S3 and GCS have no blob lease. Server expiry is Azure-only in stage 2 (H21).
 **Cost of step 6.** In the statcatlib#126 corpus, 2,979 roots at 560 KB to
 1.6 MB each come to 1.7 to 4.7 GB read per run, at 3 to 10 runs a day. The
 release job caches each root's SHA-256 and leaf set, keyed by the root's path
-and the ETag the LIST returns. Roots never change, so after the first run a
-run reads only the roots written since the last one (3 to 10 a day, 5 to
-16 MB). An ETag that differs from the cached one forces a re-read.
+and the ETag the LIST returns. The cache lives on a persistent volume the job
+mounts (`--state-dir`), so it survives between runs, and it holds root paths,
+ETags, SHA-256s and leaf hashes only. Roots never change, so after the first
+run a run reads only the roots written since the last one (3 to 10 a day, 5 to
+16 MB). An ETag that differs from the cached one forces a re-read. Without the
+volume, every run pays the first run's read.
 
 **Crashes.** A crash before step 4 leaves orphan segments; the next run adopts
 them in step 3. A crash after step 4 leaves the plans in the headers of the
@@ -573,7 +587,12 @@ The specification PR replaces §11.6's retention text:
     3. it bumps `restore_epoch` in `catalog.json`;
     4. it deletes the roots above S;
     5. it writes root S + 1 of the new epoch, whose `previous_root_sha256`
-       hashes root S, through the writer's internal commit;
+       hashes root S, through the writer's internal commit. Its `retired`
+       holds root S's tombstones and a tombstone for each edition that a
+       discarded root it could read records in a leaf and that root S records
+       in neither a leaf nor `retired`. GC then keeps those editions' files
+       while the tombstones are within the window, and `reinstate` can bring
+       one back;
     6. it writes `CURRENT`.
 - A crash after step 2 leaves readers whose `CURRENT` fails with the new
   epoch and no root in it, so they fail closed until root S + 1 exists. A
@@ -582,6 +601,11 @@ The specification PR replaces §11.6's retention text:
   leak as orphan leaves do, until a later design adds their collection.
 - A restore only adds segments under `history/` and never deletes or
   overwrites one.
+- On a restore epoch above 0, the fold records a `pending/` registration last
+  modified before the `created_at` of the epoch's first root, whose edition
+  the head does not record, with `release_at: null`, so only an explicit
+  release publishes a registration that predates the restore (spec §11.2
+  step 2).
 - Backups copy in this order (§10.3): `data/`, edition directories, leaves,
   roots, `inventory/HISTORY`, `history/`, then `CURRENT`. A root missing at
   copy time was deleted after its segment and `HISTORY` were written, so the
