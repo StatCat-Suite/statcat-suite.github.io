@@ -84,6 +84,7 @@ nav:
       - sdmxlib: https://statcat-suite.github.io/sdmxlib/
       - statcatlib: https://statcat-suite.github.io/statcatlib/
       - sdmxlib-rest: https://statcat-suite.github.io/sdmxlib-rest/
+      - statcat-serve: https://statcat-suite.github.io/statcat-serve/
   - Documentation Sites: sites.md
   - Project Conventions: conventions.md
   - Design:
