@@ -2,7 +2,7 @@
 
 The StatCat Suite docs hub: a Material for MkDocs site served at the root of
 https://statcat-suite.github.io/. The project sites (sdmxlib, statcatlib,
-sdmxlib-rest) are built and deployed from their own repositories and served
+sdmxlib-rest, statcat-serve) are built and deployed from their own repositories and served
 under their own paths on the same domain.
 
 ## What lives here
@@ -31,10 +31,11 @@ working from here reads them at these paths:
 |---|---|---|---|---|
 | sdmxlib | `../sdmxlib` | none | The SDMX model and its readers and writers, the `sdmx` store schema, the edition manifest (`manifest.json`, format 3.0), the Inventory documents (`catalog.json`, `CURRENT`, roots, leaves), their rules and reader | 24 |
 | sdmxlib-rest | `../sdmxlib-rest` | sdmxlib | The SDMX REST service | 8 |
+| statcat-serve | `../statcat-serve` | sdmxlib, sdmxlib-rest, statcatlib | The serving program for a catalog of many products (Phase 6): the router, pulls, pools, the result store and `deploy/`. A skeleton until Phase 6 builds it | none yet |
 | statcatlib | `../statcatlib` | sdmxlib | The catalog model, the `statcat` store schema, the search index, the Inventory writer, the manifest's `statcat` section, the Inventory root's `extensions.statcat` catalog description | 8 |
 
 Dependencies run one way: sdmxlib imports neither sdmxlib-rest nor
-statcatlib. Each repository has:
+statcatlib, and no library imports statcat-serve. Each repository has:
 
 - a `CLAUDE.md` with its own rules;
 - `EGM.md` files beside the code, written by `egm_bootstrap`, which describe

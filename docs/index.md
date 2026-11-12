@@ -46,14 +46,17 @@ it:
 | **sdmxlib** | SDMX for Python: structures, reference metadata and observation data, from REST, files or a local DuckDB store. Owns the edition format and the Inventory documents. | [Site](https://statcat-suite.github.io/sdmxlib/) | [GitHub](https://github.com/StatCat-Suite/sdmxlib) |
 | **statcatlib** | A queryable catalog engine for DCAT-AP, StatDCAT-AP, CKAN and SDMX: catalog records linked to sdmxlib's structures, with full-text and vector search. Seals editions and writes the Inventory. | [Site](https://statcat-suite.github.io/statcatlib/) | [GitHub](https://github.com/StatCat-Suite/statcatlib) |
 | **sdmxlib-rest** | A generic SDMX-REST HTTP surface over an sdmxlib `LocalRegistry`, with seams for everything catalog-specific. Serves editions. | [Site](https://statcat-suite.github.io/sdmxlib-rest/) | [GitHub](https://github.com/StatCat-Suite/sdmxlib-rest) |
+| **statcat-serve** | The serving program for a catalog of many products: it routes each request to the pod that holds the product's live edition, pulls editions from object storage, and stores rendered results. A skeleton until Phase 6 of the sharded catalog builds it. | [Site](https://statcat-suite.github.io/statcat-serve/) | [GitHub](https://github.com/StatCat-Suite/statcat-serve) |
 
-All three require Python 3.14 and are published on PyPI.
+All four require Python 3.14. sdmxlib, statcatlib and sdmxlib-rest are published on PyPI, and statcat-serve has no release yet.
 
 ```mermaid
 graph LR
     S[SDMX registries<br/>CKAN portals] -->|REST| SL[sdmxlib]
     SL --> SC[statcatlib]
     SL --> SR[sdmxlib-rest]
+    SC --> SV[statcat-serve]
+    SR --> SV
     SC -->|seals| E[(edition)]
     E -->|opened by| SR
     SR -->|SDMX-REST| C[clients]
@@ -63,7 +66,8 @@ Dependencies run one way: statcatlib and sdmxlib-rest each depend on sdmxlib,
 sdmxlib depends on neither, and neither depends on the other. Editions and
 the Inventory are how they meet: statcatlib seals editions and records them
 in the Inventory, sdmxlib defines and checks both, and sdmxlib-rest serves
-the live edition.
+the live edition. statcat-serve depends on all three, and none of them imports
+it.
 
 ## Where to read next
 

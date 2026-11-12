@@ -9,6 +9,7 @@ versioned with its code, under one domain:
 | sdmxlib | `https://statcat-suite.github.io/sdmxlib/` | `StatCat-Suite/sdmxlib` |
 | statcatlib | `https://statcat-suite.github.io/statcatlib/` | `StatCat-Suite/statcatlib` |
 | sdmxlib-rest | `https://statcat-suite.github.io/sdmxlib-rest/` | `StatCat-Suite/sdmxlib-rest` |
+| statcat-serve | `https://statcat-suite.github.io/statcat-serve/` | `StatCat-Suite/statcat-serve` |
 
 GitHub Pages serves the organisation's `statcat-suite.github.io` repository
 at the domain root and each project's Pages under its repository name, so the
