@@ -78,5 +78,8 @@ it.
   projects compatible.
 - [Storage and deployment](storage.md): the storage tiers, the lakehouse
   analogy, the deployment layouts and the rules for serving a fleet.
+- [Moving a service](moving-a-service.md): rebuilding bundles as products,
+  publishing them to ADLS with the release job, and serving the live edition
+  from a pod.
 - [Documentation sites](sites.md): the configuration every project site
   shares, and how to add a project.
