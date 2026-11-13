@@ -80,6 +80,7 @@ nav:
   - Domain Model: domain-model.md
   - Architecture: architecture.md
   - Storage and Deployment: storage.md
+  - Moving a Service: moving-a-service.md
   - Projects:
       - sdmxlib: https://statcat-suite.github.io/sdmxlib/
       - statcatlib: https://statcat-suite.github.io/statcatlib/
