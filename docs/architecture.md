@@ -149,8 +149,8 @@ replacement.
 
 Each format an edition or the Inventory holds records its version, and a
 reader that meets a version it does not read refuses the document instead of
-misreading it. The versions below are those of sdmxlib 0.88.0, statcatlib
-0.19.0 and sdmxlib-rest 0.10.3:
+misreading it. The versions below are those of sdmxlib 0.89.0, statcatlib
+0.20.0 and sdmxlib-rest 0.11.0:
 
 | Recorded in | Version of | At | Refused by |
 | --- | --- | --- | --- |

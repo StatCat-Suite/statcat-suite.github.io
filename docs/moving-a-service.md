@@ -6,14 +6,31 @@ covers the move from single bundles to products, editions and the Inventory:
 what to rebuild, how to publish to ADLS, and how a serving pod finds, pulls
 and opens the live edition of each product.
 
-Every step below ran end to end on 2026-11-13 against a real storage account,
-with the packages installed from PyPI into a fresh environment:
+Install these releases, with these caps:
 
 | Package | Version | Cap in your `pyproject.toml` |
 | --- | --- | --- |
-| sdmxlib | 0.88.0 | `sdmxlib>=0.88,<0.89` |
-| statcatlib | 0.19.0 | `statcatlib[blob]>=0.19,<0.20` |
-| sdmxlib-rest | 0.10.3 | `sdmxlib-rest>=0.10.3,<0.11` |
+| sdmxlib | 0.89.0 | `sdmxlib>=0.89,<0.90` |
+| statcatlib | 0.20.0 | `statcatlib[blob]>=0.20,<0.21` |
+| sdmxlib-rest | 0.11.0 | `sdmxlib-rest>=0.11,<0.12` |
+
+Every step below ran end to end on 2026-11-13 against a real storage account,
+with sdmxlib 0.88.0, statcatlib 0.19.0 and sdmxlib-rest 0.10.3 installed from
+PyPI into a fresh environment. The releases above change no format version
+([version checks](architecture.md#version-checks)), so editions sealed with
+the earlier releases open unchanged. Their changes that reach this guide:
+
+- sdmxlib 0.89 adds `tiers=` to `check_on_open`
+  ([Checking an edition on open](#checking-an-edition-on-open)) and
+  `write_observations(mode="merge")`
+  ([Applying a revision delta](#applying-a-revision-delta)).
+- sdmxlib 0.89's availability builders and sdmxlib-rest 0.11's
+  `/availability` give the time dimension as a `timeRange`, where they gave a
+  list of periods
+  ([sdmxlib's Upgrading](https://statcat-suite.github.io/sdmxlib/upgrading/)).
+- statcatlib 0.20's seal keeps the search index that `build_index` built,
+  with its options, when no row changed since
+  ([statcatlib's Upgrading](https://statcat-suite.github.io/statcatlib/upgrading/)).
 
 Every suite library is pre-1.0, so cap each one below its next minor
 ([conventions](conventions.md#dependencies)), and raise a cap in the pull
@@ -161,7 +178,7 @@ Inventory version records it.
 
 ## 3. Serve from a pod
 
-A pod serves the live edition of a product in four steps. sdmxlib-rest 0.10.3
+A pod serves the live edition of a product in four steps. sdmxlib-rest 0.11
 serves one edition per process. Phase 6 of the sharded catalog builds
 StatCat-Suite/statcat-serve, which routes many products across pods, so keep
 the code below small and replace it when statcat-serve ships.
@@ -291,17 +308,46 @@ In the test, a revised edition stayed invisible to pods while it was
 embargoed, `/data` returned its rows once it was released, and a rollback
 brought the old edition back for the next pod that read the Inventory.
 
+## Applying a revision delta
+
+A revision is a new edition of the product, sealed from a working copy of the
+live one. To apply a delta file that adds periods and revises earlier ones,
+merge it into each observation table by the columns that identify an
+observation, then seal:
+
+```python
+import sdmxlib as sl
+
+wc = catalog.product("<product>").working_copy()
+binding = wc.registry.binding_for(sl.SdmxUrn.parse("<dataflow urn>"))
+schema, table = binding.table_location.split(".")
+wc.registry.write_observations(
+    schema=schema,
+    table=table,
+    source=delta,  # a Polars frame, an Arrow table or a DuckDB relation
+    mode="merge",
+    keys=("REF_AREA", "SEX", "TIME_PERIOD"),  # the dimension columns and the time column
+)
+wc.seal()
+```
+
+A source row whose keys match a table row replaces it, a row with no match is
+inserted, and rows the delta does not name stay. The merge commits as one
+DuckLake snapshot or not at all, and refuses a delta with a duplicate key
+before it writes anything. The source must have the table's columns, by name.
+The seal rewrites each data file that held a revised row, so the edition
+ships no delete file. The merge deletes no observation: a delta that withdraws
+rows needs its own `DELETE` on `wc.registry.connection` before the seal.
+
 ## Checking an edition on open
 
 `sdmxlib.edition.check_on_open(path, stamps=, remote=)` checks a pulled
 edition against its manifest once and stamps the result, so a restart runs a
-quick check. In sdmxlib 0.88 it reports each missing file outside `data/`, so a pod that
-pulled the required tier alone gets a finding for each lazy-tier file, such as
-the search index under `search/`.
-sdmxlib's next release adds `tiers=`, so a pod holding the required tier
-alone calls `check_on_open(..., tiers=("required",))` before it reports ready
-(StatCat-Suite/sdmxlib#384). Until then, call it on editions whose lazy tier
-is empty, or pull both local tiers.
+quick check. Without `tiers=`, it reports each missing file outside `data/`,
+so a pod that pulled the required tier alone gets a finding for each
+lazy-tier file, such as the search index under `search/`. A pod that holds the
+required tier alone calls `check_on_open(..., tiers=("required",))` before it
+reports ready (sdmxlib 0.89, StatCat-Suite/sdmxlib#384).
 
 ## Pitfalls the test found
 
@@ -315,7 +361,7 @@ is empty, or pull both local tiers.
 
 ## Checklist
 
-1. Pin sdmxlib 0.88, statcatlib 0.19 and sdmxlib-rest 0.10.3 with the caps
+1. Pin sdmxlib 0.89, statcatlib 0.20 and sdmxlib-rest 0.11 with the caps
    above.
 2. Rebuild every dataset as a product with statcatlib 0.17 or later, with its
    structure products.
@@ -330,7 +376,6 @@ is empty, or pull both local tiers.
 
 ## What comes next
 
-- **sdmxlib 0.89** ships `tiers=` on `check_edition` and `check_on_open`.
 - **statcat-serve** (Phase 6) ships the router, pulls, pools, readiness and a
   result store keyed by fingerprint, over sdmxlib-rest. It replaces the pod
   code in section 3.
