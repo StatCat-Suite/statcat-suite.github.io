@@ -11,14 +11,17 @@ Install these releases, with these caps:
 | Package | Version | Cap in your `pyproject.toml` |
 | --- | --- | --- |
 | sdmxlib | 0.89.0 | `sdmxlib>=0.89,<0.90` |
-| statcatlib | 0.20.0 | `statcatlib[blob]>=0.20,<0.21` |
+| statcatlib | 0.21.0 | `statcatlib[blob]>=0.21,<0.22` |
 | sdmxlib-rest | 0.11.0 | `sdmxlib-rest>=0.11,<0.12` |
 
 Every step below ran end to end on 2026-11-13 against a real storage account,
 with sdmxlib 0.88.0, statcatlib 0.19.0 and sdmxlib-rest 0.10.3 installed from
-PyPI into a fresh environment. The releases above change no format version
-([version checks](architecture.md#version-checks)), so editions sealed with
-the earlier releases open unchanged. Their changes that reach this guide:
+PyPI into a fresh environment. Of the releases above, only statcatlib 0.21
+changes a format version: it writes search index format 4
+([version checks](architecture.md#version-checks)). Editions sealed with the
+earlier releases open unchanged, and search over them raises until each
+product is re-indexed ([Re-indexing for statcatlib 0.21](#re-indexing-for-statcatlib-021)).
+Their changes that reach this guide:
 
 - sdmxlib 0.89 adds `tiers=` to `check_on_open`
   ([Checking an edition on open](#checking-an-edition-on-open)) and
@@ -31,6 +34,10 @@ the earlier releases open unchanged. Their changes that reach this guide:
 - statcatlib 0.20's seal keeps the search index that `build_index` built,
   with its options, when no row changed since
   ([statcatlib's Upgrading](https://statcat-suite.github.io/statcatlib/upgrading/)).
+- statcatlib 0.21 requires `lang=` on every label, filter and search call,
+  returns each label as an `sdmxlib.LocalisedString`, and writes search index
+  format 4
+  ([statcatlib's Upgrading, 0.21.0](https://statcat-suite.github.io/statcatlib/upgrading/#0210-labels-carry-their-language-and-search-index-format-4)).
 
 Every suite library is pre-1.0, so cap each one below its next minor
 ([conventions](conventions.md#dependencies)), and raise a cap in the pull
@@ -349,6 +356,27 @@ lazy-tier file, such as the search index under `search/`. A pod that holds the
 required tier alone calls `check_on_open(..., tiers=("required",))` before it
 reports ready (sdmxlib 0.89, StatCat-Suite/sdmxlib#384).
 
+## Re-indexing for statcatlib 0.21
+
+statcatlib 0.21 writes search index format 4 and opens formats 3 and 4. Over
+a format 3 edition every label, facet and query call works, and every search
+call raises `IncompatibleCatalogError` until the product seals a format 4
+edition. statcatlib 0.20 refuses a format 4 index, so upgrade every reader and
+producer (pods, the release job, `statcat upload`, `statcat verify-catalog`)
+to 0.21 before the first re-index.
+
+Re-index each product once: open a working copy, call `build_index` with the
+`model_name` the product was built with so the stored vectors are reused,
+seal, then upload and release the edition as in [Publish to ADLS](#2-publish-to-adls).
+A product whose newest edition is embargoed waits until that edition is
+released or cancelled, because a working copy starts from the live edition.
+The `statcat` schema, the `statcat` section and the Inventory do not change,
+so no product is re-ingested.
+[statcatlib's Upgrading, 0.21.0](https://statcat-suite.github.io/statcatlib/upgrading/#0210-labels-carry-their-language-and-search-index-format-4)
+gives a loop over every product of a catalog directory and lists the API
+changes: `lang=` is required on every label, filter and search call, labels
+are `LocalisedString`s, and bulk results carry `gaps`.
+
 ## Pitfalls the test found
 
 | Pitfall | Do this |
@@ -361,8 +389,9 @@ reports ready (sdmxlib 0.89, StatCat-Suite/sdmxlib#384).
 
 ## Checklist
 
-1. Pin sdmxlib 0.89, statcatlib 0.20 and sdmxlib-rest 0.11 with the caps
-   above.
+1. Pin sdmxlib 0.89, statcatlib 0.21 and sdmxlib-rest 0.11 with the caps
+   above, in every reader and producer, before any product seals a version 4
+   search index. Then re-index each existing product once.
 2. Rebuild every dataset as a product with statcatlib 0.17 or later, with its
    structure products.
 3. Create the custom access-check role and the four identities.

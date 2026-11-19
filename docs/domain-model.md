@@ -133,12 +133,14 @@ database, with no call to the publisher:
 import statcatlib as sc
 import statcatlib.query as q
 
-with sc.Catalog("my-catalog") as cat:
-    # Datasets with a reference area anywhere under Canada
-    in_canada = cat.query(sc.AggregateDataset).filter(q.within("REF_AREA", "CA")).collect()
+with sc.Catalog.open("my-catalog") as cat:
+    view = cat.product("estat").view()
 
-    # Every dimension of one dataset, with its codes
-    codes = cat.code_map("ESTAT:NAMA_10_GDP(1.0)")
+    # Datasets with a reference area anywhere under Canada
+    in_canada = view.query(sc.AggregateDataset).filter(q.within("REF_AREA", "CA")).collect()
+
+    # Every dimension of one dataset, each code with its English label
+    codes = view.code_map("ESTAT:NAMA_10_GDP(1.0)", lang="en")
 ```
 
 Datasets with no SDMX structure, such as records from a CKAN portal, carry no
