@@ -3,8 +3,11 @@
 * **Author:** Gabriel Gellner
 * **Date:** 2026-10-30
 * **Status:** Built in sdmxlib: Stages 1 and 2 shipped in sdmxlib 0.79.0
-  (StatCat-Suite/sdmxlib#308 and StatCat-Suite/sdmxlib#310). statcatlib's
-  Stages 4 and 5 are open, as StatCat-Suite/statcatlib#91. The design came
+  (StatCat-Suite/sdmxlib#308 and StatCat-Suite/sdmxlib#310); statcatlib's
+  Stages 4 and 5 shipped in statcatlib 0.21.0 (StatCat-Suite/statcatlib#169,
+  closing StatCat-Suite/statcatlib#91), with the amendments that statcatlib's
+  [label lookup design](https://statcat-suite.github.io/statcatlib/design/label-lookup/)
+  made to D4, D9 and the Stage 4 row. The design came
   from an EGM brainstorm: two Goldfish review rounds, a seven-lens final
   review and a four-lens review of the final choices, with every decision
   settled by the owner. A suite design: it
@@ -216,7 +219,10 @@ the only lookup that falls back over several tags. `pick()` with no tag raises
 `values()` and the values of `items()` return `LocalisedString`. Bulk and
 columnar outputs return text and carry the tag separately: `as_dict()`,
 Polars frames, query DSL projections and statcatlib projection columns.
-`get`'s default is returned as given.
+`get`'s default is returned as given. In statcatlib (amended in 0.21.0),
+mappings (`Labels`), single lookups, `.scalars()` values and search hit fields
+carry `LocalisedString`; only `Row` projection columns carry text, with a
+`__lang` column beside each.
 
 **D5. Storage.** `InternationalString` keeps its stored map and builds a
 `LocalisedString` when an accessor returns it. Storing value objects cost
@@ -335,7 +341,9 @@ or `msgspec.structs.asdict(value)`. Key order is part of the contract (`text`,
 then `lang`), so a sorted encoder such as `bundle/_canonical.py:50` writes
 `as_dict()` output and never a `LocalisedString`. statcatlib serialises with
 stdlib `json`, which raises on a Struct, so it converts with
-`msgspec.structs.asdict` and adds msgspec as a direct dependency.
+`msgspec.structs.asdict`. statcatlib lists msgspec in its `dev` group only;
+at runtime msgspec arrives through sdmxlib (amended in 0.21.0, label lookup
+LL-D10).
 
 **D10. Suite design location.** This design lives in the hub, under
 `docs/design/` (GH-12).
@@ -580,7 +588,10 @@ rebuilds every catalog; that belongs to StatCat-Suite/statcatlib#70.
   sdmxlib's `test_language_tags.py` plus every two-letter ASCII pair.
 - Every statcatlib `lang` / `langs` parameter refuses a malformed tag with
   `InvalidTagError`, enumerated as sdmxlib's test does, in
-  `tests/unit/test_language_tags.py`.
+  `tests/test_language_tags.py` (statcatlib's tests are flat).
+- Ingest refuses an empty `lang`: `normalize_tag` in every
+  `InternationalString` constructor and `tag_alias` in index grouping, with a
+  test in `tests/test_language_tags.py`.
 - `just ci` passes.
 
 ## Staging
@@ -591,8 +602,8 @@ rebuilds every catalog; that belongs to StatCat-Suite/statcatlib#70.
 | 1 | sdmxlib, StatCat-Suite/sdmxlib#308 | Rename to `LocalisedString`; D6; D9; `InvalidTagError`, raised by `normalize_tag`; D9 stated inline in sdmxlib's language-tags design, its D7, as a suite contract | Done (`ddedb45`, sdmxlib 0.79.0) |
 | 2 | sdmxlib, StatCat-Suite/sdmxlib#309 | D3, D4, D7, D8, D11–D13; a "Model classes and fields" section in `docs/design/query-naming.md` with the D1, D2 and D8 rules and a deviations row for `label`/`locale` → `text`/`lang`; the hub's bench scripts turned into gated tests in `tests/bench/`; the audit hook and call-site table | Done (StatCat-Suite/sdmxlib#310, `203cbf4`, sdmxlib 0.79.0) |
 | 3 | hub | This design and its evidence (D10) | Done (GH-13) |
-| 4 | statcatlib, StatCat-Suite/statcatlib#91, after StatCat-Suite/statcatlib#70 | Move to the sdmxlib release containing Stages 1–2; fix every call-site table row (`_istring_to_map`, `store.py:1162, 1171`, `sources/sdmx.py:115`, `scopes.py:999, 1054`) with public returns kept on `.text` / `as_dict()`; add msgspec as a dependency | statcatlib criteria pass |
-| 5 | statcatlib, StatCat-Suite/statcatlib#91; slice 4 of its language-tags RFC | Public label APIs return `LocalisedString`; projection columns `title` and `title__lang`, which settles that RFC's open `title_lang` item; ingest refuses an empty `lang` before `lance.py:1260` | statcatlib criteria pass |
+| 4 | statcatlib, StatCat-Suite/statcatlib#91, after StatCat-Suite/statcatlib#70 | Move to the sdmxlib release containing Stages 1–2; fix every call-site table row (`_istring_to_map`, `store.py:1162, 1171`, `sources/sdmx.py:115`, `scopes.py:999, 1054`) with public returns kept on `.text` / `as_dict()`; add msgspec to the `dev` group | Done (StatCat-Suite/statcatlib#169, statcatlib 0.21.0) |
+| 5 | statcatlib, StatCat-Suite/statcatlib#91; slice 4 of its language-tags RFC | Public label APIs return `LocalisedString`; projection columns `title` and `title__lang`, which settles that RFC's open `title_lang` item; ingest refuses an empty `lang` before `lance.py:1260` | Done (StatCat-Suite/statcatlib#169, statcatlib 0.21.0) |
 
 Stage 1 also updates every `LocalizedText` site: sdmxlib
 `docs/design/language-tags.md` (Non-goals lines 39–40, D7 lines 195–206,

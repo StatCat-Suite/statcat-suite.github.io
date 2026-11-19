@@ -150,7 +150,7 @@ replacement.
 Each format an edition or the Inventory holds records its version, and a
 reader that meets a version it does not read refuses the document instead of
 misreading it. The versions below are those of sdmxlib 0.89.0, statcatlib
-0.20.0 and sdmxlib-rest 0.11.0:
+0.21.0 and sdmxlib-rest 0.11.0:
 
 | Recorded in | Version of | At | Refused by |
 | --- | --- | --- | --- |
@@ -161,7 +161,7 @@ misreading it. The versions below are those of sdmxlib 0.89.0, statcatlib
 | `inventory/HISTORY`'s and each history segment's `format_version` | sdmxlib's history format | `"1.0"` | sdmxlib's Inventory reader, which reads any `1.x` (`InventoryError`) |
 | The manifest's `extensions.statcat.format` | statcatlib's `statcat` section | `3` | statcatlib's `check_catalog` |
 | `statcat._meta` | statcatlib's catalog schema | `"2.2"` | statcatlib's `Product.view()` and `Product.working_copy()` |
-| `search/index.json`'s `version` | statcatlib's search index manifest | `3` | statcatlib's `Product.view()` and `Product.working_copy()` |
+| `search/index.json`'s `version` | statcatlib's search index manifest | `4` | statcatlib 0.21's `Product.view()` and `Product.working_copy()`, which open versions 3 and 4 and refuse search over a version 3 index (`IncompatibleCatalogError`) until the product is re-indexed; statcatlib 0.20 refuses version 4 |
 
 A minor version of the manifest or the Inventory format only adds optional
 fields. Any other change to these versions means sealing new editions at the
